@@ -19,11 +19,8 @@
  *
  */
  
-using System;
 using System.Data.Common;
 using System.Management.Automation;
-using System.Management.Automation.Runspaces;
-using Oracle.ManagedDataAccess.Client;
 
 namespace OracleConnection
 {
