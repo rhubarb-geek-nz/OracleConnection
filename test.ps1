@@ -19,8 +19,8 @@
 #
 
 param(
-	$ConnectionString = "User Id=Scott;Password=tiger;Data Source=localhost",
-	$CommandText = "SELECT CURRENT_TIMESTAMP FROM DUAL"
+	$ConnectionString = 'User Id=Scott;Password=tiger;Data Source=localhost',
+	$CommandText = 'SELECT * FROM V$VERSION'
 )
 
 $ErrorActionPreference = "Stop"
@@ -29,8 +29,6 @@ trap
 {
 	throw $PSItem
 }
-
-Write-Host $Env:PSModulePath
 
 $Connection = New-OracleConnection -ConnectionString $ConnectionString
 
@@ -46,10 +44,11 @@ try
 
 	try
 	{
-		while ($Reader.Read())
-		{
-			Write-Host $Reader.GetString(0)
-		}
+		$DataTable = New-Object System.Data.DataTable
+
+		$DataTable.Load($Reader)
+
+		$DataTable | Select-Object -ExcludeProperty RowError,RowState,Table,ItemArray,HasErrors | Format-Table
 	}
 	finally
 	{
