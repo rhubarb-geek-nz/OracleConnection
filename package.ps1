@@ -48,4 +48,18 @@ Get-ChildItem -Path "$BINDIR" -Filter "Oracle*" | Foreach-Object {
 	Copy-Item -Path $_.FullName -Destination "OracleConnection"
 }
 
+[string]$text = (Invoke-WebRequest -Uri "https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/3.21.90/License").Content
+
+$preOffset = $text.IndexOf('<pre class')
+
+$endOffset = $text.IndexOf('</pre>',$preOffset)
+
+$pre = $text.Substring($preOffset,$endOffset-$preOffset+6)
+
+$xmlDoc = [System.Xml.XmlDocument]($pre)
+
+$xmlDoc.DocumentElement.FirstChild.Value | Out-File -FilePath "OracleConnection/LICENSE.Oracle"
+
+$null = Invoke-WebRequest -Uri "https://www.gnu.org/licenses/lgpl-3.0.txt" -OutFile "OracleConnection/LICENSE.LGPL3"
+
 Compress-Archive -Path "OracleConnection" -DestinationPath "OracleConnection.zip"
