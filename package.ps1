@@ -78,4 +78,8 @@ else
 	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "OracleConnection/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
 }
 
+$date = [Datetime]::ParseExact('06/29/2007 12:00 +00:00', 'MM/dd/yyyy HH:mm zzz', $null)
+
+Get-ChildItem ""OracleConnection/LICENSE.LGPL3 | Foreach-Object {$_.LastWriteTime = $date}
+
 Compress-Archive -Path "OracleConnection" -DestinationPath "OracleConnection.zip"
