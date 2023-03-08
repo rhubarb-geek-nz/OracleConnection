@@ -9,15 +9,15 @@ $ unzip -l OracleConnection.zip
 Archive:  OracleConnection.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-     7652  03-08-2023 07:55   OracleConnection/LICENSE.LGPL3
-     6468  03-08-2023 07:55   OracleConnection/LICENSE.Oracle
+     7652  06-29-2007 14:00   OracleConnection/LICENSE.LGPL3
+     6467  07-28-2022 00:57   OracleConnection/LICENSE.Oracle
   4585608  01-11-2023 02:17   OracleConnection/Oracle.ManagedDataAccess.dll
-    12113  03-08-2023 07:55   OracleConnection/OracleConnection.deps.json
-     5120  03-08-2023 07:55   OracleConnection/OracleConnection.dll
-     8956  03-08-2023 07:55   OracleConnection/OracleConnection.pdb
-      385  03-07-2023 19:31   OracleConnection/OracleConnection.psd1
+    12113  03-09-2023 00:16   OracleConnection/OracleConnection.deps.json
+     5120  03-09-2023 00:16   OracleConnection/OracleConnection.dll
+     8956  03-09-2023 00:16   OracleConnection/OracleConnection.pdb
+      385  03-08-2023 19:36   OracleConnection/OracleConnection.psd1
 ---------                     -------
-  4626302                     7 files
+  4626301                     7 files
 ```
 
 Install by unzipping into a directory on the [PSModulePath](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath)
