@@ -50,16 +50,32 @@ foreach ($Filter in "Oracle*", "LICENSE*") {
 	}
 }
 
-[string]$text = (Invoke-WebRequest -Uri "https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/3.21.90/License").Content
+If ($IsWindows)
+{
+	$NuGetPackages = "$Env:USERPROFILE/.nuget/packages"
+}
+else
+{
+	$NuGetPackages = "$Env:HOME/.nuget/packages"
+}
 
-$preOffset = $text.IndexOf('<pre class')
+Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/3.21.90/LICENSE.txt" -Destination "OracleConnection/LICENSE.Oracle"
 
-$endOffset = $text.IndexOf('</pre>',$preOffset)
+If (-not($IsWindows))
+{
+	Get-ChildItem -Path "OracleConnection" -File | Foreach-Object {
+		chmod -x $_.FullName
+		If ( $LastExitCode -ne 0 )
+		{
+			Exit $LastExitCode
+		}
+	}
+}
+else
+{
+	$content = [System.IO.File]::ReadAllText("OracleConnection/LICENSE.LGPL3")
 
-$pre = $text.Substring($preOffset,$endOffset-$preOffset+6)
-
-$xmlDoc = [System.Xml.XmlDocument]($pre)
-
-$xmlDoc.DocumentElement.FirstChild.Value | Out-File -FilePath "OracleConnection/LICENSE.Oracle"
+	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "OracleConnection/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
+}
 
 Compress-Archive -Path "OracleConnection" -DestinationPath "OracleConnection.zip"
