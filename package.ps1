@@ -61,7 +61,13 @@ else
 
 Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/3.21.90/LICENSE.txt" -Destination "OracleConnection/LICENSE.Oracle"
 
-If (-not($IsWindows))
+If ($IsWindows)
+{
+	$content = [System.IO.File]::ReadAllText("OracleConnection/LICENSE.LGPL3")
+
+	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "OracleConnection/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
+}
+else
 {
 	Get-ChildItem -Path "OracleConnection" -File | Foreach-Object {
 		chmod -x $_.FullName
@@ -71,17 +77,9 @@ If (-not($IsWindows))
 		}
 	}
 }
-else
-{
-	$content = [System.IO.File]::ReadAllText("OracleConnection/LICENSE.LGPL3")
 
-	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "OracleConnection/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
-}
+$date = [Datetime]::ParseExact('09/30/2017 07:16:26', 'MM/dd/yyyy HH:mm:ss', $null)
 
-$uk = New-Object system.globalization.cultureinfo('en-GB')
-
-$date = [Datetime]::ParseExact('09/30/2017 07:16:26 +00:00', 'MM/dd/yyyy HH:mm:ss zzz', $uk)
-
-Get-ChildItem ""OracleConnection/LICENSE.LGPL3 | Foreach-Object {$_.LastWriteTime = $date}
+Get-ChildItem "OracleConnection/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $date}
 
 Compress-Archive -Path "OracleConnection" -DestinationPath "OracleConnection.zip"
