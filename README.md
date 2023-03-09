@@ -9,12 +9,12 @@ $ unzip -l OracleConnection.zip
 Archive:  OracleConnection.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-     7652  06-29-2007 14:00   OracleConnection/LICENSE.LGPL3
+     7652  09-30-2017 07:16   OracleConnection/LICENSE.LGPL3
      6467  07-28-2022 00:57   OracleConnection/LICENSE.Oracle
   4585608  01-11-2023 02:17   OracleConnection/Oracle.ManagedDataAccess.dll
-    12113  03-09-2023 00:16   OracleConnection/OracleConnection.deps.json
-     5120  03-09-2023 00:16   OracleConnection/OracleConnection.dll
-     8956  03-09-2023 00:16   OracleConnection/OracleConnection.pdb
+    12113  03-09-2023 02:02   OracleConnection/OracleConnection.deps.json
+     5120  03-09-2023 02:02   OracleConnection/OracleConnection.dll
+     8956  03-09-2023 02:02   OracleConnection/OracleConnection.pdb
       385  03-08-2023 19:36   OracleConnection/OracleConnection.psd1
 ---------                     -------
   4626301                     7 files
