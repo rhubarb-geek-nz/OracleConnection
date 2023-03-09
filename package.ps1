@@ -18,9 +18,13 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
+param(
+	$Framework = 'netstandard2.1'
+)
+
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-$BINDIR = "bin/Release/netstandard2.1/publish"
+$BINDIR = "bin/Release/$Framework/publish"
 
 trap
 {
@@ -35,7 +39,7 @@ foreach ($Name in "obj", "bin", "OracleConnection", "OracleConnection.zip")
 	} 
 }
 
-dotnet publish OracleConnection.csproj --configuration Release
+dotnet publish OracleConnection.csproj --configuration Release --framework $Framework
 
 If ( $LastExitCode -ne 0 )
 {
@@ -59,7 +63,15 @@ else
 	$NuGetPackages = "$Env:HOME/.nuget/packages"
 }
 
-Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/3.21.90/LICENSE.txt" -Destination "OracleConnection/LICENSE.Oracle"
+switch ($Framework)
+{
+	'net481' {
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/21.9.0/LICENSE.txt" -Destination "OracleConnection/LICENSE.Oracle"
+		}
+	'netstandard2.1' {
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/3.21.90/LICENSE.txt" -Destination "OracleConnection/LICENSE.Oracle"
+		}
+}
 
 If ($IsWindows)
 {
