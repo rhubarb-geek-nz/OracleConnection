@@ -25,7 +25,6 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-$RID = [System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier.Split('-')[0]
 $ModulesPath = "opt/microsoft/powershell/7/Modules"
 $PackageName = "rhubarb-geek-nz-$ModuleName"
 
@@ -66,7 +65,7 @@ try
 	@"
 Name: $PackageName
 Version: $Version
-Release: $RID
+Release: 1
 BuildArch: noarch
 Requires: powershell
 License: LGPL3

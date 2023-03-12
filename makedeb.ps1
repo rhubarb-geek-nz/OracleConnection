@@ -25,7 +25,6 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-$RID = [System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier.Split('-')[0]
 $ModulesPath = "opt/microsoft/powershell/7/Modules"
 $PackageName = "rhubarb-geek-nz-oracleconnection"
 
@@ -75,7 +74,7 @@ try
 
 	@"
 Package: $PackageName
-Version: $Version-$RID
+Version: $Version
 Architecture: $DpkgArch
 Depends: powershell
 Section: misc
@@ -85,7 +84,7 @@ Maintainer: $Maintainer
 Description: PowerShell $ModuleName Cmdlet
 "@ | Set-Content "root/DEBIAN/control"
 
-	dpkg-deb --root-owner-group --build root "${PackageName}_${Version}-${RID}_${DpkgArch}.deb"
+	dpkg-deb --root-owner-group --build root "${PackageName}_${Version}_${DpkgArch}.deb"
 
 	If ( $LastExitCode -ne 0 )
 	{
