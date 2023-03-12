@@ -101,7 +101,7 @@ PowerShell Cmdlet for connection to Oracle databases
 }
 finally
 {
-	foreach ($Name in "root", "rpms")
+	foreach ($Name in "root", "rpms", "rpm.spec")
 	{
 		if (Test-Path $Name)
 		{
