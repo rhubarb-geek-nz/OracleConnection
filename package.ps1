@@ -25,13 +25,15 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 $BINDIR = "bin/Release/$Framework/publish"
+$Version = '0.1'
+$ModuleName = 'OracleConnection'
 
 trap
 {
 	throw $PSItem
 }
 
-foreach ($Name in "obj", "bin", "OracleConnection", "OracleConnection.zip")
+foreach ($Name in "obj", "bin", "$ModuleName", "$ModuleName.zip")
 {
 	if (Test-Path "$Name")
 	{
@@ -39,18 +41,18 @@ foreach ($Name in "obj", "bin", "OracleConnection", "OracleConnection.zip")
 	} 
 }
 
-dotnet publish OracleConnection.csproj --configuration Release --framework $Framework
+dotnet publish $ModuleName.csproj --configuration Release --framework $Framework
 
 If ( $LastExitCode -ne 0 )
 {
 	Exit $LastExitCode
 }
 
-$null = New-Item -Path "OracleConnection" -ItemType Directory
+$null = New-Item -Path "$ModuleName" -ItemType Directory
 
 foreach ($Filter in "Oracle*", "LICENSE*") {
 	Get-ChildItem -Path "$BINDIR" -Filter $Filter | Foreach-Object {
-		Copy-Item -Path $_.FullName -Destination "OracleConnection"
+		Copy-Item -Path $_.FullName -Destination "$ModuleName"
 	}
 }
 
@@ -66,22 +68,24 @@ else
 switch ($Framework)
 {
 	'net481' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/21.9.0/LICENSE.txt" -Destination "OracleConnection/LICENSE.Oracle"
+		$Version = '21.9.0'
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleName/LICENSE.Oracle"
 		}
 	'netstandard2.1' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/3.21.90/LICENSE.txt" -Destination "OracleConnection/LICENSE.Oracle"
+		$Version = '3.21.90'
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleName/LICENSE.Oracle"
 		}
 }
 
 If ($IsWindows)
 {
-	$content = [System.IO.File]::ReadAllText("OracleConnection/LICENSE.LGPL3")
+	$content = [System.IO.File]::ReadAllText("$ModuleName/LICENSE.LGPL3")
 
-	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "OracleConnection/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
+	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "$ModuleName/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
 }
 else
 {
-	Get-ChildItem -Path "OracleConnection" -File | Foreach-Object {
+	Get-ChildItem -Path "$ModuleName" -File | Foreach-Object {
 		chmod -x $_.FullName
 		If ( $LastExitCode -ne 0 )
 		{
@@ -92,6 +96,25 @@ else
 
 $date = [Datetime]::ParseExact('09/30/2017 07:16:26', 'MM/dd/yyyy HH:mm:ss', $null)
 
-Get-ChildItem "OracleConnection/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $date}
+Get-ChildItem "$ModuleName/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $date}
 
-Compress-Archive -Path "OracleConnection" -DestinationPath "OracleConnection.zip"
+@"
+@{
+	RootModule = '$ModuleName.dll'
+	ModuleVersion = '$Version'
+	GUID = '10cb2755-a167-4970-acad-5f637f6537c4'
+	Author = 'Roger Brown'
+	CompanyName = 'rhubarb-geek-nz'
+	Copyright = '(c) Roger Brown. All rights reserved.'
+	FunctionsToExport = @()
+	CmdletsToExport = @('New-$ModuleName')
+	VariablesToExport = '*'
+	AliasesToExport = @()
+	PrivateData = @{
+		PSData = @{
+		}
+	}
+}
+"@ | Set-Content -Path "$ModuleName/$ModuleName.psd1"
+
+Compress-Archive -Path "$ModuleName" -DestinationPath "$ModuleName-$Framework-$Version.zip"

@@ -35,3 +35,12 @@ TNS for Linux: Version 11.2.0.2.0 - Production
 NLSRTL Version 11.2.0.2.0 - Production
 
 ```
+The following scripts can be used to make formal packages for specific RID.
+
+| Script | RID | Framework | Installation Directory |
+| ------ | --- | --------- | ---------------------- |
+| makemsi.ps1 | win | net481 | c:\Program Files\WindowsPowerShell\Modules\OracleConnection |
+| makemsi.ps1 | win | netstandard2.1 | c:\Program Files\PowerShell\Modules\OracleConnection |
+| makeosx.ps1 | osx | netstandard2.1 | /usr/local/share/powershell/Modules/OracleConnection |
+| makedeb.ps1 | linux | netstandard2.1 | /opt/microsoft/powershell/7/Modules/OracleConnection |
+| makerpm.ps1 | linux | netstandard2.1 | /opt/microsoft/powershell/7/Modules/OracleConnection |
