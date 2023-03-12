@@ -81,8 +81,6 @@ PowerShell Cmdlet for connection to Oracle databases
 %dir %attr(555,root,root) /$ModulesPath/$ModuleName
 %attr(444,root,root)      /$ModulesPath/$ModuleName/$ModuleName.dll
 %attr(444,root,root)      /$ModulesPath/$ModuleName/$ModuleName.psd1
-%attr(444,root,root)      /$ModulesPath/$ModuleName/$ModuleName.pdb
-%attr(444,root,root)      /$ModulesPath/$ModuleName/$ModuleName.deps.json
 %attr(444,root,root)      /$ModulesPath/$ModuleName/Oracle.ManagedDataAccess.dll
 %attr(444,root,root)      /$ModulesPath/$ModuleName/LICENSE.Oracle
 %attr(444,root,root)      /$ModulesPath/$ModuleName/LICENSE.LGPL3

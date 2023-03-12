@@ -26,14 +26,8 @@
   </Fragment>
   <Fragment>
     <ComponentGroup Id="ProductComponents">
-      <Component Id="COracleConnectionDepsJson" Guid="*" Directory="INSTALLDIR2" Win64="$(env.ORACLEISWIN64)">
-        <File Id="FOracleConnectionDepsJson" KeyPath="yes" Source="$(env.SOURCEDIR)\OracleConnection.deps.json" />
-      </Component>
       <Component Id="COracleConnectionDll" Guid="*" Directory="INSTALLDIR2" Win64="$(env.ORACLEISWIN64)">
         <File Id="FOracleConnectionDll" KeyPath="yes" Source="$(env.SOURCEDIR)\OracleConnection.dll" />
-      </Component>
-      <Component Id="COracleConnectionPdb" Guid="*" Directory="INSTALLDIR2" Win64="$(env.ORACLEISWIN64)">
-        <File Id="FOracleConnectionPdb" KeyPath="yes" Source="$(env.SOURCEDIR)\OracleConnection.pdb" />
       </Component>
       <Component Id="COracleConnectionPsd1" Guid="*" Directory="INSTALLDIR2" Win64="$(env.ORACLEISWIN64)">
         <File Id="FOracleConnectionPsd1" KeyPath="yes" Source="$(env.SOURCEDIR)\OracleConnection.psd1" />

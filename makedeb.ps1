@@ -58,7 +58,9 @@ $null = New-Item -Path "." -Name "root/$ModulesPath/$ModuleName" -ItemType "dire
 try
 {
 	Get-ChildItem -Path "$ModuleName" | Foreach-Object {
-		Copy-Item -Path $_.FullName -Destination "root/$ModulesPath/$ModuleName"
+		$Name = $_.Name
+		Copy-Item -Path $_.FullName -Destination "root/$ModulesPath/$ModuleName/$Name"
+		chmod -wx "root/$ModulesPath/$ModuleName/$Name"
 	}
 
 	$Size = ((du -sk root) -split '\s+')[0]
@@ -97,6 +99,7 @@ finally
 	{
 		if (Test-Path $Name)
 		{
+			chmod -R +w "$Name"
 			Remove-Item "$Name" -Recurse -Force
 		}
 	}
