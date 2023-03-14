@@ -20,6 +20,26 @@ Archive:  OracleConnection-netstandard2.1-3.21.90.zip
 
 Install by unzipping into a directory on the [PSModulePath](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath)
 
+Create a database
+
+```
+$ docker run --detach --publish 1521:1521 --name oracle-xe orangehrm/oracle-xe-11g
+```
+
+When it is up and running, login
+
+```
+$ sqlplus sys/oracle@localhost:1521 as sysdba
+```
+
+Then create a user
+
+```
+SQL> CREATE USER Scott IDENTIFIED BY tiger;
+
+SQL> GRANT CREATE SESSION TO Scott;
+```
+
 Run the `test.ps1` to confirm it works.
 
 ```
