@@ -25,7 +25,6 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 $BINDIR = "bin/Release/$Framework/publish"
-$Version = '0.1'
 $ModuleName = 'OracleConnection'
 
 trap
@@ -33,7 +32,13 @@ trap
 	throw $PSItem
 }
 
-foreach ($Name in "obj", "bin", "$ModuleName", "$ModuleName.zip")
+$xmlDoc = [System.Xml.XmlDocument](Get-Content "$ModuleName.$Framework.nuspec")
+
+$Version = $xmlDoc.SelectSingleNode("/package/metadata/version").FirstChild.Value
+$CompanyName = $xmlDoc.SelectSingleNode("/package/metadata/authors").FirstChild.Value
+$ModuleId = $xmlDoc.SelectSingleNode("/package/metadata/id").FirstChild.Value
+
+foreach ($Name in "obj", "bin", "$ModuleId", "$ModuleId.$Version.nupkg")
 {
 	if (Test-Path "$Name")
 	{
@@ -48,13 +53,13 @@ If ( $LastExitCode -ne 0 )
 	Exit $LastExitCode
 }
 
-$null = New-Item -Path "$ModuleName" -ItemType Directory
+$null = New-Item -Path "$ModuleId" -ItemType Directory
 
 foreach ($Filter in "Oracle*", "LICENSE*") {
 	Get-ChildItem -Path "$BINDIR" -Filter $Filter | Foreach-Object {
 		if ((-not($_.Name.EndsWith('.pdb'))) -and (-not($_.Name.EndsWith('.deps.json'))))
 		{
-			Copy-Item -Path $_.FullName -Destination "$ModuleName"
+			Copy-Item -Path $_.FullName -Destination "$ModuleId"
 		}
 	}
 }
@@ -71,24 +76,22 @@ else
 switch ($Framework)
 {
 	'net481' {
-		$Version = '21.9.0'
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleName/LICENSE.Oracle"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleId/LICENSE.Oracle"
 		}
 	'netstandard2.1' {
-		$Version = '3.21.90'
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleName/LICENSE.Oracle"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleId/LICENSE.Oracle"
 		}
 }
 
 If ($IsWindows)
 {
-	$content = [System.IO.File]::ReadAllText("$ModuleName/LICENSE.LGPL3")
+	$content = [System.IO.File]::ReadAllText("$ModuleId/LICENSE.LGPL3")
 
-	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "$ModuleName/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
+	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "$ModuleId/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
 }
 else
 {
-	Get-ChildItem -Path "$ModuleName" -File | Foreach-Object {
+	Get-ChildItem -Path "$ModuleId" -File | Foreach-Object {
 		chmod -x $_.FullName
 		If ( $LastExitCode -ne 0 )
 		{
@@ -99,7 +102,7 @@ else
 
 $date = [Datetime]::ParseExact('09/30/2017 07:16:26', 'MM/dd/yyyy HH:mm:ss', $null)
 
-Get-ChildItem "$ModuleName/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $date}
+Get-ChildItem "$ModuleId/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $date}
 
 @"
 @{
@@ -118,6 +121,13 @@ Get-ChildItem "$ModuleName/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $
 		}
 	}
 }
-"@ | Set-Content -Path "$ModuleName/$ModuleName.psd1"
+"@ | Set-Content -Path "$ModuleId/$ModuleId.psd1"
 
-Compress-Archive -Path "$ModuleName" -DestinationPath "$ModuleName-$Framework-$Version.zip"
+(Get-Content "./README.md")[0..2] | Set-Content -Path "$ModuleId/README.md"
+
+nuget pack "$ModuleName.$Framework.nuspec"
+
+If ( $LastExitCode -ne 0 )
+{
+	Exit $LastExitCode
+}
