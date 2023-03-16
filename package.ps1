@@ -76,20 +76,18 @@ else
 switch ($Framework)
 {
 	'net481' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleId/LICENSE.Oracle"
-		}
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleId"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/info.txt" -Destination "$ModuleId"
+		$compatiblePSEdition = "Desktop"
+	}
 	'netstandard2.1' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleId/LICENSE.Oracle"
-		}
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleId"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/info.txt" -Destination "$ModuleId"
+		$compatiblePSEdition = "Core"
+	}
 }
 
-If ($IsWindows)
-{
-	$content = [System.IO.File]::ReadAllText("$ModuleId/LICENSE.LGPL3")
-
-	$content.Replace("`u{000D}`u{000A}","`u{000A}") | Out-File "$ModuleId/LICENSE.LGPL3" -Encoding Ascii -NoNewLine
-}
-else
+If (-not($IsWindows))
 {
 	Get-ChildItem -Path "$ModuleId" -File | Foreach-Object {
 		chmod -x $_.FullName
@@ -100,10 +98,6 @@ else
 	}
 }
 
-$date = [Datetime]::ParseExact('09/30/2017 07:16:26', 'MM/dd/yyyy HH:mm:ss', $null)
-
-Get-ChildItem "$ModuleId/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $date}
-
 @"
 @{
 	RootModule = '$ModuleName.dll'
@@ -112,6 +106,7 @@ Get-ChildItem "$ModuleId/LICENSE.LGPL3" | Foreach-Object {$_.LastWriteTime = $da
 	Author = 'Roger Brown'
 	CompanyName = 'rhubarb-geek-nz'
 	Copyright = '(c) Roger Brown. All rights reserved.'
+	CompatiblePSEditions = @("$compatiblePSEdition")
 	FunctionsToExport = @()
 	CmdletsToExport = @('New-$ModuleName')
 	VariablesToExport = '*'

@@ -4,20 +4,19 @@
     <id>rhubarb-geek-nz.OracleConnection</id>
     <version>3.21.90</version>
     <authors>rhubarb-geek-nz</authors>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license type="expression">LGPL-3.0-or-later</license>
-    <!-- <icon>icon.png</icon> -->
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="file">LICENSE.txt</license>
     <readme>README.md</readme>
     <projectUrl>https://github.com/rhubarb-geek-nz/OracleConnection</projectUrl>
     <description>MSSQL Connection Tool</description>
     <releaseNotes>NuGet package for netstandard2.1 OracleConnection</releaseNotes>
-    <copyright>(c) Roger Brown. All rights reserved.</copyright>
+    <copyright>2023</copyright>
     <tags>New-OracleConnection</tags>
   </metadata>
   <files>
-     <file src="rhubarb-geek-nz.OracleConnection/README.md" target="" />
-     <file src="rhubarb-geek-nz.OracleConnection/LICENSE.*" target="" />
-     <file src="rhubarb-geek-nz.OracleConnection/*.dll" target="" />
-     <file src="rhubarb-geek-nz.OracleConnection/*.psd1" target="" />
+     <file src="rhubarb-geek-nz.OracleConnection\README.md" target="" />
+     <file src="rhubarb-geek-nz.OracleConnection\*.txt" target="" />
+     <file src="rhubarb-geek-nz.OracleConnection\*.dll" target="" />
+     <file src="rhubarb-geek-nz.OracleConnection\*.psd1" target="" />
   </files>
 </package>

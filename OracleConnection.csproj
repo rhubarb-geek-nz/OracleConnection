@@ -11,13 +11,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="LICENSE">
-      <Link>LICENSE.LGPL3</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <PackageReference Include="Oracle.ManagedDataAccess">
       <Version>21.9.0</Version>
