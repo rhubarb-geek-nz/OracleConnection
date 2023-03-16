@@ -15,11 +15,9 @@
     <tags>New-OracleConnection</tags>
   </metadata>
   <files>
-     <file src="rhubarb-geek-nz.OracleConnection/README.md" target="README.md" />
-     <file src="rhubarb-geek-nz.OracleConnection/LICENSE.LGPL3" target="LICENSE.LGPL3" />
-     <file src="rhubarb-geek-nz.OracleConnection/LICENSE.Oracle" target="LICENSE.Oracle" />
-     <file src="rhubarb-geek-nz.OracleConnection/OracleConnection.dll" target="OracleConnection.dll" />
-     <file src="rhubarb-geek-nz.OracleConnection/Oracle.ManagedDataAccess.dll" target="Oracle.ManagedDataAccess.dll" />
-     <file src="rhubarb-geek-nz.OracleConnection/rhubarb-geek-nz.OracleConnection.psd1" target="rhubarb-geek-nz.OracleConnection.psd1" />
+     <file src="rhubarb-geek-nz.OracleConnection/README.md" target="" />
+     <file src="rhubarb-geek-nz.OracleConnection/LICENSE.*" target="" />
+     <file src="rhubarb-geek-nz.OracleConnection/*.dll" target="" />
+     <file src="rhubarb-geek-nz.OracleConnection/*.psd1" target="" />
   </files>
 </package>
