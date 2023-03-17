@@ -8,10 +8,10 @@
     <license type="file">LICENSE.txt</license>
     <readme>README.md</readme>
     <projectUrl>https://github.com/rhubarb-geek-nz/OracleConnection</projectUrl>
-    <description>MSSQL Connection Tool</description>
+    <description>Oracle Connection Tool</description>
     <releaseNotes>NuGet package for netstandard2.1 OracleConnection</releaseNotes>
     <copyright>2023</copyright>
-    <tags>New-OracleConnection</tags>
+    <tags>PSEdition_Core</tags>
   </metadata>
   <files>
      <file src="rhubarb-geek-nz.OracleConnection\README.md" target="" />
