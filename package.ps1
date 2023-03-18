@@ -19,13 +19,22 @@
 #
 
 param(
-	$Framework = 'netstandard2.1'
+	$ModuleName = 'OracleConnection',
+	$Framework = 'netstandard2.1',
+	$CompanyName = "rhubarb-geek-nz"
 )
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 $BINDIR = "bin/Release/$Framework/publish"
-$ModuleName = 'OracleConnection'
+$compatiblePSEdition = "$PSEdition"
+$PowerShellVersion = $PSVersionTable.PSVersion.ToString()
+$RequireLicenseAcceptance = '$false'
+
+If (($IsWindows -eq $null) -and ($PSEdition -eq "Desktop"))
+{
+	$IsWindows = $true
+}
 
 trap
 {
@@ -35,8 +44,11 @@ trap
 $xmlDoc = [System.Xml.XmlDocument](Get-Content "$ModuleName.$Framework.nuspec")
 
 $Version = $xmlDoc.SelectSingleNode("/package/metadata/version").FirstChild.Value
-$CompanyName = $xmlDoc.SelectSingleNode("/package/metadata/authors").FirstChild.Value
 $ModuleId = $xmlDoc.SelectSingleNode("/package/metadata/id").FirstChild.Value
+$ProjectUri = $xmlDoc.SelectSingleNode("/package/metadata/projectUrl").FirstChild.Value
+$Description = $xmlDoc.SelectSingleNode("/package/metadata/description").FirstChild.Value
+$Author = $xmlDoc.SelectSingleNode("/package/metadata/authors").FirstChild.Value
+$Copyright = $xmlDoc.SelectSingleNode("/package/metadata/copyright").FirstChild.Value
 
 foreach ($Name in "obj", "bin", "$ModuleId", "$ModuleId.$Version.nupkg")
 {
@@ -76,14 +88,18 @@ else
 switch ($Framework)
 {
 	'net481' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleId"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleId/license.txt"
 		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/info.txt" -Destination "$ModuleId"
 		$compatiblePSEdition = "Desktop"
+		$PowerShellVersion = "5.1"
+		$RequireLicenseAcceptance = '$true'
 	}
 	'netstandard2.1' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleId"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleId/license.txt"
 		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/info.txt" -Destination "$ModuleId"
 		$compatiblePSEdition = "Core"
+		$PowerShellVersion = "7.2"
+		$RequireLicenseAcceptance = '$true'
 	}
 }
 
@@ -103,16 +119,21 @@ If (-not($IsWindows))
 	RootModule = '$ModuleName.dll'
 	ModuleVersion = '$Version'
 	GUID = '10cb2755-a167-4970-acad-5f637f6537c4'
-	Author = 'Roger Brown'
-	CompanyName = 'rhubarb-geek-nz'
-	Copyright = '(c) Roger Brown. All rights reserved.'
-	CompatiblePSEditions = @("$compatiblePSEdition")
+	Author = '$Author'
+	CompanyName = '$CompanyName'
+	Copyright = '$Copyright'
+	Description = '$Description'
+	CompatiblePSEditions = @('$compatiblePSEdition')
+	PowerShellVersion = "$PowerShellVersion"
 	FunctionsToExport = @()
 	CmdletsToExport = @('New-$ModuleName')
 	VariablesToExport = '*'
 	AliasesToExport = @()
 	PrivateData = @{
 		PSData = @{
+			ProjectUri = '$ProjectUri'
+			RequireLicenseAcceptance = $RequireLicenseAcceptance
+			LicenseUri = 'https://aka.ms/deprecateLicenseUrl'
 		}
 	}
 }
@@ -120,9 +141,3 @@ If (-not($IsWindows))
 
 (Get-Content "./README.md")[0..2] | Set-Content -Path "$ModuleId/README.md"
 
-nuget pack "$ModuleName.$Framework.nuspec"
-
-If ( $LastExitCode -ne 0 )
-{
-	Exit $LastExitCode
-}

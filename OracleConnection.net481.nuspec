@@ -3,9 +3,10 @@
   <metadata>
     <id>rhubarb-geek-nz.OracleConnection</id>
     <version>21.9.0</version>
-    <authors>rhubarb-geek-nz</authors>
+    <authors>Roger Brown</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <license type="file">LICENSE.txt</license>
+    <license type="file">license.txt</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
     <readme>README.md</readme>
     <projectUrl>https://github.com/rhubarb-geek-nz/OracleConnection</projectUrl>
     <description>Oracle Connection Tool</description>
