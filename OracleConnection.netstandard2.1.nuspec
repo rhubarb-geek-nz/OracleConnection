@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package >
   <metadata>
-    <id>rhubarb-geek-nz.OracleConnection</id>
+    <id>rhubarb-geek-nz.OracleConnection.Core</id>
     <version>3.21.90</version>
     <authors>Roger Brown</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
