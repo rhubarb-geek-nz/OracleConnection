@@ -20,7 +20,7 @@
 
 param(
 	$ModuleName = 'OracleConnection',
-	$Framework = 'netstandard2.1',
+	$Framework = 'net481',
 	$CompanyName = "rhubarb-geek-nz"
 )
 
