@@ -18,12 +18,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net481'">
-    <Version>21.9.0</Version>
+    <Version>21.12.0</Version>
     <PackageId>rhubarb-geek-nz.OracleConnection</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <Version>3.21.90</Version>
+    <Version>3.21.120</Version>
     <PackageId>rhubarb-geek-nz.OracleConnection.Core</PackageId>
   </PropertyGroup>
 
