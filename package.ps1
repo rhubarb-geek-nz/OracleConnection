@@ -18,20 +18,15 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-param(
-	$ModuleName = 'OracleConnection',
-	$Framework = 'netstandard2.1',
-	$CompanyName = "rhubarb-geek-nz"
-)
+param($ProjectName, $TargetFramework, $PublishDir, $ModuleId, $Version)
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-$BINDIR = "bin/Release/$Framework/publish"
-$compatiblePSEdition = "$PSEdition"
+$compatiblePSEdition = $PSEdition
 $PowerShellVersion = $PSVersionTable.PSVersion.ToString()
 $RequireLicenseAcceptance = '$false'
 
-If (($IsWindows -eq $null) -and ($PSEdition -eq "Desktop"))
+If (($IsWindows -eq $null) -and ($PSEdition -eq 'Desktop'))
 {
 	$IsWindows = $true
 }
@@ -41,71 +36,53 @@ trap
 	throw $PSItem
 }
 
-$xmlDoc = [System.Xml.XmlDocument](Get-Content "$ModuleName.$Framework.nuspec")
-
-$Version = $xmlDoc.SelectSingleNode("/package/metadata/version").FirstChild.Value
-$ModuleId = $xmlDoc.SelectSingleNode("/package/metadata/id").FirstChild.Value
-$ProjectUri = $xmlDoc.SelectSingleNode("/package/metadata/projectUrl").FirstChild.Value
-$Description = $xmlDoc.SelectSingleNode("/package/metadata/description").FirstChild.Value
-$Author = $xmlDoc.SelectSingleNode("/package/metadata/authors").FirstChild.Value
-$Copyright = $xmlDoc.SelectSingleNode("/package/metadata/copyright").FirstChild.Value
-
-foreach ($Name in "obj", "bin", "$ModuleId", "$ModuleId.$Version.nupkg")
+function Get-SingleNodeValue([System.Xml.XmlDocument]$doc,[string]$path)
 {
-	if (Test-Path "$Name")
-	{
-		Remove-Item "$Name" -Force -Recurse
-	} 
+	return $doc.SelectSingleNode($path).FirstChild.Value
 }
 
-dotnet publish $ModuleName.csproj --configuration Release --framework $Framework
+$xmlDoc = [System.Xml.XmlDocument](Get-Content "$ProjectName.csproj")
 
-If ( $LastExitCode -ne 0 )
-{
-	Exit $LastExitCode
-}
+$ProjectUri = Get-SingleNodeValue $xmlDoc '/Project/PropertyGroup/PackageProjectUrl'
+$Description = Get-SingleNodeValue $xmlDoc '/Project/PropertyGroup/Description'
+$Author = Get-SingleNodeValue $xmlDoc '/Project/PropertyGroup/Authors'
+$Copyright = Get-SingleNodeValue $xmlDoc '/Project/PropertyGroup/Copyright'
+$AssemblyName = Get-SingleNodeValue $xmlDoc '/Project/PropertyGroup/AssemblyName'
+$CompanyName = Get-SingleNodeValue $xmlDoc '/Project/PropertyGroup/Company'
 
-$null = New-Item -Path "$ModuleId" -ItemType Directory
+$ModulePath = "$PublishDir/Modules/$ModuleId/$Version"
 
-foreach ($Filter in "Oracle*", "LICENSE*") {
-	Get-ChildItem -Path "$BINDIR" -Filter $Filter | Foreach-Object {
-		if ((-not($_.Name.EndsWith('.pdb'))) -and (-not($_.Name.EndsWith('.deps.json'))))
-		{
-			Copy-Item -Path $_.FullName -Destination "$ModuleId"
-		}
-	}
-}
+$null = New-Item -Path "$PublishDir/Modules" -ItemType Directory
+$null = New-Item -Path "$PublishDir/Modules/$ModuleId" -ItemType Directory
+$null = New-Item -Path "$ModulePath" -ItemType Directory
 
-If ($IsWindows)
-{
-	$NuGetPackages = "$Env:USERPROFILE/.nuget/packages"
-}
-else
-{
-	$NuGetPackages = "$Env:HOME/.nuget/packages"
-}
+$NuGetPackages = "$HOME/.nuget/packages"
 
-switch ($Framework)
+switch ($TargetFramework)
 {
 	'net481' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModuleId/license.txt"
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/info.txt" -Destination "$ModuleId"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/LICENSE.txt" -Destination "$ModulePath/license.txt"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess/$Version/info.txt" -Destination "$ModulePath"
 		$compatiblePSEdition = "Desktop"
 		$PowerShellVersion = "5.1"
 		$RequireLicenseAcceptance = '$true'
 	}
 	'netstandard2.1' {
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModuleId/license.txt"
-		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/info.txt" -Destination "$ModuleId"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/LICENSE.txt" -Destination "$ModulePath/license.txt"
+		Copy-Item -Path "$NuGetPackages/oracle.manageddataaccess.core/$Version/info.txt" -Destination "$ModulePath"
 		$compatiblePSEdition = "Core"
 		$PowerShellVersion = "7.2"
 		$RequireLicenseAcceptance = '$true'
 	}
 }
 
+Get-ChildItem -Path $PublishDir -File -Filter 'Oracle*.dll' | Foreach-Object {
+	Copy-Item -Path $_.FullName -Destination $ModulePath
+}
+
 If (-not($IsWindows))
 {
-	Get-ChildItem -Path "$ModuleId" -File | Foreach-Object {
+	Get-ChildItem -Path $ModulePath -File | Foreach-Object {
 		chmod -x $_.FullName
 		If ( $LastExitCode -ne 0 )
 		{
@@ -116,7 +93,7 @@ If (-not($IsWindows))
 
 @"
 @{
-	RootModule = '$ModuleName.dll'
+	RootModule = '$AssemblyName.dll'
 	ModuleVersion = '$Version'
 	GUID = '10cb2755-a167-4970-acad-5f637f6537c4'
 	Author = '$Author'
@@ -124,9 +101,9 @@ If (-not($IsWindows))
 	Copyright = '$Copyright'
 	Description = '$Description'
 	CompatiblePSEditions = @('$compatiblePSEdition')
-	PowerShellVersion = "$PowerShellVersion"
+	PowerShellVersion = '$PowerShellVersion'
 	FunctionsToExport = @()
-	CmdletsToExport = @('New-$ModuleName')
+	CmdletsToExport = @('New-$ProjectName')
 	VariablesToExport = '*'
 	AliasesToExport = @()
 	PrivateData = @{
@@ -137,7 +114,6 @@ If (-not($IsWindows))
 		}
 	}
 }
-"@ | Set-Content -Path "$ModuleId/$ModuleId.psd1"
+"@ | Set-Content -Path "$ModulePath/$ModuleId.psd1"
 
-(Get-Content "./README.md")[0..2] | Set-Content -Path "$ModuleId/README.md"
-
+(Get-Content "./README.md")[0..2] | Set-Content -Path "$ModulePath/README.md"

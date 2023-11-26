@@ -2,20 +2,16 @@
 
 Very simple `PowerShell` module for creating a connection to an `Oracle` database.
 
-Use `package.ps1` to create the module.
+Build the modules with `dotnet`
 
-Install by copying into a directory on the [PSModulePath](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath).
+```
+dotnet publish OracleConnection.csproj --configuration Release --framework net481
+dotnet publish OracleConnection.csproj --configuration Release --framework netstandard2.1
+```
+
+Install by copying the modules into a directory on the [PSModulePath](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath).
 
 You can publish directly to a repository using [Publish-Module](https://learn.microsoft.com/en-us/powershell/module/powershellget/publish-module?view=powershell-7.3).
-
-You can create a package using
-
-```
-$ nuget pack OracleConnection.netstandard2.1.nuspec
-Attempting to build package from 'OracleConnection.netstandard2.1.nuspec'.
-...
-Successfully created package 'rhubarb-geek-nz.OracleConnection.3.21.90.nupkg'.
-```
 
 Create a database
 
