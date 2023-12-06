@@ -46,7 +46,8 @@
   </ItemGroup>
 
   <Target Name="Package" AfterTargets="Publish" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="pwsh ./package.ps1 $(AssemblyName) $(TargetFramework) $(PublishDir) $(PackageId) $(Version)" />
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet pwsh -ExecutionPolicy Bypass -File ./package.ps1 $(AssemblyName) $(TargetFramework) $(PublishDir) $(PackageId) $(Version)" />
   </Target>
 
 </Project>
