@@ -5,13 +5,10 @@ Very simple `PowerShell` module for creating a connection to an `Oracle` databas
 Build the modules with `dotnet`
 
 ```
-dotnet publish OracleConnection.csproj --configuration Release --framework net481
-dotnet publish OracleConnection.csproj --configuration Release --framework netstandard2.1
+dotnet publish OracleConnection.csproj --configuration Release
 ```
 
 Install by copying the modules into a directory on the [PSModulePath](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath).
-
-You can publish directly to a repository using [Publish-Module](https://learn.microsoft.com/en-us/powershell/module/powershellget/publish-module?view=powershell-7.3).
 
 Create a database
 

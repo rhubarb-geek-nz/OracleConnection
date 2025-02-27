@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net481;netstandard2.1</TargetFrameworks>
-    <AssemblyName>OracleConnection</AssemblyName>
-    <Copyright>Copyright &#169; 2023 Roger Brown</Copyright>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>RhubarbGeekNz.OracleConnection</AssemblyName>
+    <Copyright>Copyright &#169; 2025 Roger Brown</Copyright>
     <AssemblyTitle>PowerShell Cmdlet for OracleConnection</AssemblyTitle>
     <Product>OracleConnection for PowerShell</Product>
     <Company>rhubarb-geek-nz</Company>
@@ -16,16 +16,8 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>OracleConnection</PackageTags>
     <CertificateThumbprint>601A8B683F791E51F647D34AD102C38DA4DDB65F</CertificateThumbprint>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net481'">
-    <Version>21.12.0</Version>
-    <PackageId>rhubarb-geek-nz.OracleConnection</PackageId>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <Version>3.21.120</Version>
     <PackageId>rhubarb-geek-nz.OracleConnection.Core</PackageId>
+    <Version>3.21.120</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,16 +26,8 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="Oracle.ManagedDataAccess">
-      <Version>$(Version)</Version>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <PackageReference Include="Oracle.ManagedDataAccess.Core">
-      <Version>$(Version)</Version>
-    </PackageReference>
+  <ItemGroup>
+    <ProjectReference Include="..\Alc\Alc.csproj" />
   </ItemGroup>
 
   <Target Name="Sign" AfterTargets="Compile" Condition=" '$(Configuration)' == 'Release' AND '$(OS)' == 'Windows_NT' ">
@@ -59,8 +43,7 @@
   </Target>
 
   <Target Name="Package" AfterTargets="Publish" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="dotnet tool restore" />
-    <Exec Command="dotnet pwsh -ExecutionPolicy Bypass -File ./package.ps1 $(AssemblyName) $(TargetFramework) $(PublishDir) $(PackageId) $(Version)" />
+    <Exec Command="pwsh -NoProfile -ExecutionPolicy Bypass -File ./package.ps1 $(ProjectName) $(TargetFramework) $(PublishDir) $(PackageId) $(Version)" />
   </Target>
 
 </Project>
