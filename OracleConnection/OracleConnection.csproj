@@ -17,7 +17,7 @@
     <PackageTags>OracleConnection</PackageTags>
     <CertificateThumbprint>601A8B683F791E51F647D34AD102C38DA4DDB65F</CertificateThumbprint>
     <PackageId>rhubarb-geek-nz.OracleConnection.Core</PackageId>
-    <Version>3.21.120</Version>
+    <Version>3.21.170</Version>
   </PropertyGroup>
 
   <ItemGroup>
