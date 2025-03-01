@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Roger Brown.
+// Copyright (c) 2025 Roger Brown.
 // Licensed under the MIT License.
 
 namespace RhubarbGeekNz.OracleConnection

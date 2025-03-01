@@ -83,13 +83,19 @@ $moduleSettings = @{
 	VariablesToExport = '*'
 	AliasesToExport = @()
 	ProjectUri = $ProjectUri
+	LicenseUri = 'https://aka.ms/deprecateLicenseUrl'
 	RequireLicenseAcceptance = $true
 }
 
 New-ModuleManifest @moduleSettings
 
-Import-PowerShellDataFile -LiteralPath "$PublishDir$ModuleId.psd1" | Export-PowerShellDataFile | Set-Content -LiteralPath "$ModulePath/$ModuleId.psd1"
-
-Remove-Item "$PublishDir$ModuleId.psd1"
+try
+{
+	Import-PowerShellDataFile -LiteralPath "$PublishDir$ModuleId.psd1" | Export-PowerShellDataFile | Set-Content -LiteralPath "$ModulePath/$ModuleId.psd1"
+}
+finally
+{
+	Remove-Item "$PublishDir$ModuleId.psd1"
+}
 
 (Get-Content -LiteralPath '../README.md')[0..2] | Set-Content -Path "$ModulePath/README.md"
